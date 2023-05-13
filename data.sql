@@ -274,12 +274,13 @@ create table centre(
     nomCentre varchar(50)
 );
 
-create entreprise_centre(
+create table entreprise_centre(
     idEC int unsigned auto_increment primary key,
     id_entreprises int,
     idCentre int,
-    foreign key(id_entreprises) references entreprises(id)
-)
+    foreign key(id_entreprises) references entreprises(id),
+    foreign key(idCentre) references centre(idCentre)
+);
 
 create table Produit(
     idProduit int unsigned auto_increment primary key,
@@ -297,7 +298,7 @@ create table different_charge(
 );
 
 create table AchatAnalytique(
-    idAchat int unsigned primary key,
+    idAchat int unsigned auto_increment primary key,
     rubrique varchar(100),
     quantite decimal,
     prixUnitaire decimal,
@@ -309,7 +310,7 @@ create table AchatAnalytique(
 );
 
 create table produit_incorporable(
-    idPI int unsigned primary key,
+    idPI int unsigned auto_increment primary key,
     idAchat int,
     idProduit int,
     pourcentage_produit decimal,
@@ -319,7 +320,7 @@ create table produit_incorporable(
 insert into produit_incorporable values(null,1,1,100);
 
 create table pourcentage_centre_par_produit(
-    idPourcentage int unsigned primary key,
+    idPourcentage int unsigned auto_increment primary key,
     idPI int,
     idCentre int,
     pourcentage decimal,
