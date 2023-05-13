@@ -1,0 +1,104 @@
+.navbar .navbar-nav .nav-link { 
+    color: rgb(100, 100, 100);
+    font-size: 19px;
+}
+.navbar .navbar-nav .nav-link:hover { 
+    color: #4f75f3; 
+   font-weight: bold;
+}
+#nav{
+    border-bottom: solid 1px gray;
+    width: 84%;
+    float: right;
+}
+
+#img{
+    margin: 10% auto 15% auto;
+    width: 100px;
+    height: 100px;
+}
+#exo{
+    margin-bottom: 5%;
+}
+
+#menu_verti{
+    background-color: rgb(229, 235, 243);
+    height: 720px;
+    float: left;
+}
+
+#menu_verti div{
+    text-align: center;
+}
+.nav-pills {
+    width: 16%;
+  }
+  
+  .nav-pills .nav-link {
+    border-radius: 10px;
+    margin: 12% 0 0 19%;
+    width: 170px;
+    padding-inline-start: 7.5%;
+    background-color: #f8f8f8;
+    color: rgb(100, 100, 100);
+    /* border-bottom: 1px solid #ccc; */
+  }
+  
+  .nav-pills .nav-link.active {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    border-left: 2px solid #007bff;
+  }
+  
+  .nav-pills .nav-link:hover {
+    background-color: #4f75f3;
+    color: white;
+  }
+  
+#info{
+    float: right;
+    width: 84%;
+    height: 660px;
+    text-align: center;
+    padding-top: 2%;
+    overflow: auto;
+}
+#nom_societe{
+    font-size: 35px;
+    color: #4f75f3;
+    font-family: GABRIOLA;
+}
+
+#detail{
+    font-size: 23px;
+    background-color: #2024fc;
+    width: 21%;
+    margin: 1% 0 0 39%;
+}
+#libelle{
+    text-align: right;
+    float: left;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: rgb(100, 100, 100)
+}
+#valeur{
+    text-align: left;
+    float: right;
+}
+
+#foot{
+    /* margin-top: 40%; */
+    background-color: rgb(141, 140, 140);
+    height: 90px;
+    float: right;
+    width: 100%;
+    font-size: 17PX;
+    text-align: right;
+    color: white;
+    padding: 2.5% 1% 0 0;
+}
+
+#carre{
+    background-color: rgb(100, 100, 100);
+}
+
