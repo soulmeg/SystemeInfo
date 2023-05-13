@@ -543,6 +543,7 @@ public function getcredit(){
       'nomProduit' => $this->input->post('nom'),
     );
     $this->news_model->insertion("Produit", $dataProduct);
+    redirect(base_url('acueil/welcome'));
   }
 
 
@@ -552,6 +553,7 @@ public function getcredit(){
       'nomCentre' => $this->input->post('nomC'),
     );
     $this->news_model->insertion("Centre", $dataProduct);
+		redirect(base_url('acueil/welcome'));
   }
 
 
