@@ -20,21 +20,30 @@
 </content>
 
   <h1 id="nom_societe"><?php echo $_SESSION['entreprise']['nom']; ?></h1>
-  <div id="detail">
-    <div id="libelle">
-      <p>Adresse : </p>
-      <p>Contact : </p>
-      <p>Telecopie : </p>
-      <p>Debut exercice : </p>
-      <p>Fin exercice : </p>
-    </div>
-    <div id="valeur">
-      <p><?php echo $_SESSION['entreprise']['adresse']; ?></p>
-      <p><?php echo $_SESSION['entreprise']['tel']; ?></p>
-      <p><?php echo $_SESSION['entreprise']['telecopie']; ?></p>
-      <p><?php echo $_SESSION['compta']['d_db_exo']; ?></p>
-      <p><?php echo $_SESSION['compta']['d_fin_exo']; ?></p>
-    </div>
-  </div>
+  <br>
+  <table class="table table-striped table-bordered">
+  <tbody>
+    <tr>
+      <th>Adresse :</th>
+      <td><?php echo $_SESSION['entreprise']['adresse']; ?></td>
+    </tr>
+    <tr>
+      <th>Contact :</th>
+      <td><?php echo $_SESSION['entreprise']['tel']; ?></td>
+    </tr>
+    <tr>
+      <th>Télécopie :</th>
+      <td><?php echo $_SESSION['entreprise']['telecopie']; ?></td>
+    </tr>
+    <tr>
+      <th>Début exercice :</th>
+      <td><?php echo $_SESSION['compta']['d_db_exo']; ?></td>
+    </tr>
+    <tr>
+      <th>Fin exercice :</th>
+      <td><?php echo $_SESSION['compta']['d_fin_exo']; ?></td>
+    </tr>
+  </tbody>
+</table>
 
 <?php include 'footer.php'; ?>

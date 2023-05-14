@@ -297,6 +297,7 @@ create table different_charge(
     nomDC varchar(50)
 );
 
+
 create table AchatAnalytique(
     idAchat int unsigned auto_increment primary key,
     rubrique varchar(100),
@@ -334,19 +335,43 @@ insert into centre values(null,'PLANTATION');
 
 insert into Produit values(null,'mais');
 
-insert into type_charge values(null,'charge variable');
-insert into type_charge values(null,'charge fixe');
+insert into type_charge values(null,'variable');
+insert into type_charge values(null,'fixe');
 
 insert into pourcentage_centre_par_produit values(null,1,1,40);
 insert into pourcentage_centre_par_produit values(null,1,1,25);
 insert into pourcentage_centre_par_produit values(null,1,1,35);
 
-insert into different_charge values(null,'charges incorporable');
-insert into different_charge values(null,'charges non incorporable');
-insert into different_charge values(null,'charges suppletives');
+insert into different_charge values(null,'incorporable');
+insert into different_charge values(null,'non incorporable');
+insert into different_charge values(null,'suppletives');
 
 insert into AchatAnalytique values(null,'Achat semence',10,'1200000','KG',1,1);
 insert into AchatAnalytique values(null,'Eau et electricite',1000,'500000','KW',1,1);
 
 
+insert into entreprise_centre values(NULL,1,1);
+insert into entreprise_centre values(NULL,1,2);
+insert into entreprise_centre values(NULL,1,3);
 
+create or replace view v_centreEntreprise as
+select idEC,id_entreprises,Centre.idCentre,Centre.nomCentre
+from entreprise_centre 
+join centre
+on centre.idCentre=entreprise_centre.idCentre;
+
+
+
+-- create or replace view v_analytique as
+select rubrique,prixUnitaire,quantite,(prixUnitaire*quantite) as TOTAL,unite,type_charge.typeCharge
+from produit_incorporable as PI
+join AchatAnalytique as AA
+on AA.idAchat=PI.idAchat
+join pourcentage_centre_par_produit as PCP
+on PI.idPI= PCP.idPI
+join centre
+on centre.idCentre=PCP.idCentre
+join Produit 
+on Produit.idProduit= PI.idProduit
+join type_charge 
+on type_charge.idTypeCharge=AA.idTypeCharge;

@@ -166,6 +166,32 @@ class Acueil extends CI_Controller {
       $data['codejournal'] = $this->news_model->selectioncodejournaux($table);
       $this->load->view('codejournal',$data);
   }
+  // selectionnature
+//   public function takeTypeCharge(){
+//     $this->load->model('news_model');
+//     $table = "type_charge";
+//     $data['codejournal'] = $this->news_model->selectionnature($table);
+//     $this->load->view('insert_AchatAnalytique',$data);
+// }
+
+// public function takeDiffCharge(){
+//   $this->load->model('news_model');
+//   $table = "different_charge";
+//   $data['codejournal'] = $this->news_model->selectiondifferentcharge($table);
+//   $this->load->view('insert_AchatAnalytique',$data);
+// }
+
+public function achat2(){
+  $this->load->model('news_model');
+  $table1 = "different_charge";
+  $table2 = "type_charge";
+  $data['DC'] = $this->news_model->selectiondifferentcharge($table1);
+  $data['TC'] = $this->news_model->selectionnature($table2);
+ 
+  $this->load->view('insert_AchatAnalytique',$data);
+}
+
+
 /***fonction de selection du tableau code_journaux**/
   public function getplancompta(){
       $this->load->model('news_model');
@@ -206,6 +232,7 @@ class Acueil extends CI_Controller {
         $data['total'] = $this->diffdc($data['journal']);
         $this->load->view('grandlivre',$data);
     }
+
     public function diffdc($compte){
         $this->load->model('news_model');
         $j = 0;
@@ -331,11 +358,15 @@ public function getcredit(){
       );
       $this->news_model->insertion('journal',$data);
       if($activites == "Achat"){
+          $this->session->set_userdata('achat1', $data);  
           $this->achat($compte_tiers,$this->input->post('tiers'),$this->input->post('prix'),$id_entreprises,$this->input->post('daty'),$this->input->post('refpiece'),$this->input->post('motifs'),$this->input->post('libelle'),$this->input->post('devise'));
-      }else if($activites == "Ventes"){
+          // $datakely = $this->news_model->selectionCentre();
+          // $this->load->view('');
+          redirect(base_url('acueil/achat2'));
+        }else if($activites == "Ventes"){
           $this->vente($compte_tiers,$this->input->post('tiers'),$this->input->post('prix'),$id_entreprises,$this->input->post('daty'),$this->input->post('refpiece'),$this->input->post('motifs'),$this->input->post('libelle'),$this->input->post('devise'));
-      }
-      redirect(base_url('acueil/deletesession'));
+        }
+        redirect(base_url('acueil/deletesession'));
   }
 
   public function achat($ctiers,$tiers,$prix,$ide,$daty,$rpiece,$motifs,$libelle,$devise){
@@ -557,68 +588,107 @@ public function getcredit(){
   }
 
 
-  public function selectionnature($table){
-    $this->db->select('*');
-    $this->db->from($table);
-    $result = $this->db->get();
-    
-    $table = array();
-    $i = 0;
-    foreach($result->result_array() as $row) {
-      $lists = array('idTypeCharge' => $row['idTypeCharge'],         
-                     'typeCharge' => $row['typeCharge']
-                    );
-      // $table[$i] = $lists;
-      $table[] = $lists;
-      // $i++;
-    }
-    return $table;
-  }
-
-  public function selectiondifferentcharge($table){
-    $this->db->select('*');
-    $this->db->from($table);
-    $result = $this->db->get();
-    
-    $table = array();
-    $i = 0;
-    foreach($result->result_array() as $row) {
-      $lists = array('idDC' => $row['idDC'],         
-                     'nomDC' => $row['nomDC']
-                    );
-      $table[$i] = $lists;
-      $i++;
-    }
-    return $table;
-  }
-
-  public function selectionproduits($table){
-    $this->db->select('*');
-    $this->db->from($table);
-    $result = $this->db->get();
-    
-    $table = array();
-    $i = 0;
-    foreach($result->result_array() as $row) {
-      $lists = array('idProduit' => $row['idProduit'],         
-                     'nomProduit' => $row['nomProduit']
-                    );
-      $table[$i] = $lists;
-      $i++;
-    }
-    return $table;
-  }
+ 
   public function insertProductView(){
     $this->load->view('insert_produit');
   }
   public function insertCenterView(){
     $this->load->view('insert_centre');
   }
-  public function achat2(){
-    $this->load->view('insert_AchatAnalytique');
-  }
+ 
   public function viewAnalytique(){
-    $this->load->view('produit_analytique');
+    $id_entreprises = $_SESSION['entreprise']['id'];
+    $data['centre'] = $this->news_model->selectionCentre($id_entreprises);
+    $this->load->view('produit_analytique',$data);
   }
-  
+
+
+
+  public function viewIncorporable(){
+    $this->load->model('news_model');
+    if($this->input->post('charge')=="1" || $this->session->userdata('error')){
+      $id_entreprises = $_SESSION['entreprise']['id'];
+      $data1 = array(
+        'charge' => $this->input->post('charge'),
+        'type' => $this->input->post('type')
+      );
+      $table = "Produit";
+      $data1['Produit'] = $this->news_model->selectionproduits($table);
+      $data1['centre'] = $this->news_model->selectionCentre($id_entreprises);
+      $this->load->view('insert_produitIncorporel',$data1);
+    }
+    else{
+      redirect(base_url('acueil/welcome'));
+    }
+  }
+  public function insertAnalytique(){
+    $id_entreprises = $_SESSION['entreprise']['id'];
+    $rubrique = $_SESSION['achat1']['motifs'];
+    $prixUnitaire = $_SESSION['achat1']['prix'];
+    $quantite = $_SESSION['achat1']['quantite'];
+    $unite_d_oeuvre = $this->input->post('UE');
+    $idtype = $this->input->post('type_charge');
+    $idcharge = $this->input->post('charge');
+    $idProduit = $this->input->post('idProduit');
+    $pourcentage_produit = $this->input->post('pourcentage_produit');
+    $centres = $this->news_model->selectionCentre($id_entreprises);
+    $valeurPourcentageCentre = array();
+    for($i=0;$i<count($centres);$i++){
+      $nomCentre=$centres[$i]['nomCentre'];
+      $valeur = $this->input->post($nomCentre);
+      $valeurPourcentageCentre [] = $valeur;
+    }
+    $this->error($valeurPourcentageCentre);
+
+    $achatAn = array(
+      'idAchat' => NULL,
+      'rubrique' => $rubrique,
+      'quantite' => $quantite,
+      'prixUnitaire' => $prixUnitaire,
+      'unite' => $unite_d_oeuvre,
+      'idDC' => $idcharge,
+      'idTypeCharge' => $idtype
+    );
+
+    // insert Achat analytique
+      $this->news_model->insertion('AchatAnalytique',$achatAn);
+
+    // insert produit_incorporable
+      $lastIdAchat = $this->news_model->lastid();
+      
+      $PI= array(
+        'idPI' => NULL,
+        'idAchat' => $lastIdAchat,
+        'idProduit' => $idProduit,
+        'pourcentage_produit' => $pourcentage_produit
+      ); 
+      $this->news_model->insertion('produit_incorporable',$PI);
+
+      
+    // insert pourcentage_centre_par_produit
+      $lastPI = $this->news_model->getLastIdPI();
+      for($i=0;$i<count($centres);$i++){
+        $PourcentageCentre = array(
+          'idPourcentage' => NULL,
+          'idPI' => $lastPI,
+          'idCentre' => $centres[$i]['idCentre'],
+          'pourcentage' => $valeurPourcentageCentre[$i]
+        );
+        $this->news_model->insertion('pourcentage_centre_par_produit',$PourcentageCentre);
+      }
+      redirect(base_url('acueil/welcome'));
+  }
+
+  public function error($tableau){
+    $val = 0;
+    for($i=0;$i<count($tableau);$i++){
+      $val = $val + $tableau[$i];
+    }
+    if($val < 100 || $val > 100 ){
+      $erreur="Vos pourcentages ne donne pas 100";
+      $this->session->set_userdata('error',$erreur);
+      redirect(base_url('acueil/viewIncorporable'));
+    }
+  }
+
 }

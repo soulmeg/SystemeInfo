@@ -40,6 +40,82 @@ class News_model extends CI_Model
     $row = $result->row_array();
     return $row['last_insert_id()'];
   }
+
+  public function selectionnature($table){
+    $this->db->select('*');
+    $this->db->from($table);
+    $result = $this->db->get();
+    
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array('idTypeCharge' => $row['idTypeCharge'],         
+                     'typeCharge' => $row['typeCharge']
+                    );
+      // $table[$i] = $lists;
+      $table[] = $lists;
+      // $i++;
+    }
+    return $table;
+  }
+
+  public function selectiondifferentcharge($table){
+    $this->db->select('*');
+    $this->db->from($table);
+    $result = $this->db->get();
+    
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array('idDC' => $row['idDC'],         
+                     'nomDC' => $row['nomDC']
+                    );
+      $table[$i] = $lists;
+      $i++;
+    }
+    return $table;
+  }
+
+  public function selectionproduits($table){
+    $this->db->select('*');
+    $this->db->from($table);
+    $result = $this->db->get();
+    
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array('idProduit' => $row['idProduit'],         
+                     'nomProduit' => $row['nomProduit']
+                    );
+      $table[$i] = $lists;
+      $i++;
+    }
+    return $table;
+  }
+
+  
+  public function selectionCentre($id_e){
+    $table="v_centreEntreprise";
+    $this->db->select('*');
+    $this->db->from($table);
+    $this->db->where('id_entreprises = ',$id_e);
+    $result = $this->db->get();
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array(
+                     'id_entreprises' => $row['id_entreprises'],
+                     'idCentre' => $row['idCentre'],         
+                     'nomCentre' => $row['nomCentre']
+                    );
+      $table[$i] = $lists;
+      $i++;
+    }
+    return $table;
+  }
+
+
+
 /***Requete pour prendre tous les elements du tableau entreprises**/
   public function selectionentreprises($table){
       $this->db->select('*');
@@ -358,6 +434,12 @@ public function nom_fi($actifs){
   public function supressionplancomptable($table,$id){
       $this->db->where('numero',$id);
       $this->db->delete($table);
+  }
+  public function getLastIdPI(){
+    $query = $this->db->select_max('idPI')->get('produit_incorporable');
+    $result = $query->row_array();
+    $maxId = $result['idPI'];
+    return $maxId;
   }
 
   /*public function get_users($table){

@@ -9,8 +9,8 @@
   </head>
   <?php include 'headerMenu.php'; ?>
   <body>
-    <!-- <form action="<?php echo base_url('acueil/savejournal'); ?>" method="post"> -->
-    <form action="<?php echo base_url('acueil/achat2'); ?>" method="post">
+    <form action="<?php echo base_url('acueil/savejournal'); ?>" method="post">
+    <!-- <form action="<?php echo base_url('acueil/achat2'); ?>" method="post"> -->
       	<div class="form-group">
           <label for="daty">Date</label>
           <input type="date" class="form-control" aria-describedby="emailHelp" placeholder="Date" name="daty">

@@ -23,26 +23,28 @@
 <?php include 'headerMenu.php'; ?>
 <body>
   <div class="container">
-    <h1 class="mt-5">Type de charge</h1>
-
-    <form method="post" action="insertion_produit.php" class="mt-4">
+    <h1 class="mt-5">Type de charge</h1>  
+    <h1><?php echo $_SESSION['achat1']['devise']; ?></h1>
+    <form method="post" action="<?php echo base_url('acueil/viewIncorporable'); ?>" class="mt-4">
      
       <div class="form-group">
         <label for="charge">Charge :</label>
         <select class="form-control" id="charge" name="charge">
-          <option value="incorporable">Charge incorporable</option>
-          <option value="non-incorporable">Charge non incorporable</option>
-          <option value="suppletive">Charge supplétive</option>
+          <?php for($i=0;$i<count($DC);$i++) { ?>
+            <option value="<?php echo $DC[$i]['idDC']; ?>"><?php echo $DC[$i]['nomDC']; ?></option>
+          <?php } ?>
         </select>
       </div>
 
       <div class="form-group">
         <label for="type">Type de charge :</label>
         <select class="form-control" id="type" name="type">
-          <option value="variable">Charge variable</option>
-          <option value="fixe">Charge fixe</option>
+          <?php for($i=0;$i<count($TC);$i++) { ?>
+             <option value="<?php echo $TC[$i]['idTypeCharge']; ?>"><?php echo $TC[$i]['typeCharge']; ?></option>
+          <?php } ?>
         </select>
       </div>
+      <!-- <input type="hidden" name="tableau_session" value="<?php echo $_SESSION['achat1']; ?>"> -->
 
       <button type="submit" class="btn btn-primary">valider</button>
     </form>

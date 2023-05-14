@@ -26,22 +26,18 @@
   <div class="container">
     <h1 class="mt-5">Analytique</h1>
 
-    <table class="table mt-4">
+    <table class="table mt-4" border='1'>
       <thead class="thead-blue">
       <tr>
           <th scope="col">RUBRIQUES</th>
           <th scope="col">TOTAL</th>
           <th scope="col">UNITE D'ŒUVRE</th>
           <th scope="col">NATURE</th>
+        <?php for($i=0;$i<count($centre);$i++){?>
           <th scope="col"></th>
-          <th scope="col">ADM/DIST</th>
+          <th scope="col"><?php echo $centre[$i]['nomCentre'];?></th>
           <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col">USINE</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col">PLANTATION</th>
-          <th scope="col"></th>
+        <?php } ?>
           <th scope="col"></th>
           <th scope="col">TOTAL</th>
         </tr>
@@ -50,15 +46,12 @@
           <th scope="col"></th>
           <th scope="col"></th>
           <th scope="col"></th>
+
+        <?php for($i=0;$i<count($centre);$i++){?>
           <th scope="col">%</th>
           <th scope="col">FIXE</th>
           <th scope="col">VARIABLE</th>
-          <th scope="col">%</th>
-          <th scope="col">FIXE</th>
-          <th scope="col">VARIABLE</th>
-          <th scope="col">%</th>
-          <th scope="col">FIXE</th>
-          <th scope="col">VARIABLE</th>
+        <?php } ?>
           <th scope="col">FIXE</th>
           <th scope="col">VARIABLE</th>
         
