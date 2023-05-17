@@ -59,6 +59,10 @@ class News_model extends CI_Model
     return $table;
   }
 
+
+ 
+  
+
   public function selectiondifferentcharge($table){
     $this->db->select('*');
     $this->db->from($table);
@@ -114,6 +118,130 @@ class News_model extends CI_Model
     return $table;
   }
 
+   
+  public function selection_analytique($id_e,$id_produit){
+    $table="v_analytique";
+    $this->db->select('*');
+    $this->db->from($table);
+    $this->db->where('id_entreprise = ',$id_e);
+    $this->db->where('idProduit', $id_produit);
+    $result = $this->db->get();
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array(
+                     'id_entreprise' => $row['id_entreprise'],
+                     'idAchat' => $row['idAchat'],   
+                     'idProduit' => $row['idProduit'],         
+                     'nomProduit' => $row['nomProduit'],         
+                     'rubrique' => $row['rubrique'],         
+                     'prixUnitaire' => $row['prixUnitaire'],         
+                     'quantite' => $row['quantite'],         
+                     'valeur_produit' => $row['valeur_produit'],         
+                     'pourcentage' => $row['pourcentage'],         
+                     'valeur_centre' => $row['valeur_centre'],         
+                     'idCentre' => $row['idCentre'],          
+                     'nomCentre' => $row['nomCentre'],         
+                     'unite' => $row['unite'],         
+                     'typeCharge' => $row['typeCharge']
+                    );
+      $table[$i] = $lists;
+      $i++;
+    }
+    return $table;
+  }
+
+    
+  public function selectionPerAchat($idAchat,$id_e,$id_produit){
+    $table="v_analytique";
+    $this->db->select('*');
+    $this->db->from($table);
+    $this->db->where('id_entreprise = ',$id_e);
+    $this->db->where('idProduit', $id_produit);
+    $this->db->where('idAchat', $idAchat);
+    $result = $this->db->get();
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array(
+                     'id_entreprise' => $row['id_entreprise'],
+                     'idAchat' => $row['idAchat'],   
+                     'idProduit' => $row['idProduit'],         
+                     'nomProduit' => $row['nomProduit'],         
+                     'rubrique' => $row['rubrique'],         
+                     'prixUnitaire' => $row['prixUnitaire'],         
+                     'quantite' => $row['quantite'],         
+                     'valeur_produit' => $row['valeur_produit'],         
+                     'pourcentage' => $row['pourcentage'],         
+                     'valeur_centre' => $row['valeur_centre'],         
+                     'idCentre' => $row['idCentre'],          
+                     'nomCentre' => $row['nomCentre'],         
+                     'unite' => $row['unite'],         
+                     'typeCharge' => $row['typeCharge']
+                    );
+      $table[$i] = $lists;
+      $i++;
+    }
+    return $table;
+  }
+  public function selectionidAchat($id_e,$idProduit)
+    {
+      $table = "v_analytique2";
+        $this->db->select('idAchat');
+        $this->db->from($table);
+        $this->db->where('id_entreprise = ',$id_e);
+        $this->db->where('idProduit = ',$idProduit);
+        $query = $this->db->get();
+        $result = $query->result();
+
+        $tableau = array();
+        foreach ($result as $row) {
+            $tableau[] = $row->idAchat;
+        }
+        return $tableau;
+    }
+
+    public function getTotalTypeCharge($id_entreprise,$idProduit,$typeCharge){
+        $query = $this->db->query("SELECT SUM(valeur_centre) AS total_fixe FROM v_analytique WHERE id_entreprise = '$id_entreprise' AND idProduit = '$idProduit' AND typeCharge = '$typeCharge'");
+        $result = $query->row_array();
+        $totalFixe = $result['total_fixe'];
+        return $totalFixe;
+    }
+
+    public function getTotal($id_entreprise,$idProduit){
+        $query = $this->db->query("SELECT sum(valeur_centre) as somme_global FROM v_analytique WHERE id_entreprise = '$id_entreprise' AND idProduit = '$idProduit' ");
+        $result = $query->row_array();
+        $totalFixe = $result['somme_global'];
+        return $totalFixe;
+    }
+
+  public function selection_analytique2($id_e,$id_produit){
+    $table="v_analytique2";
+    $this->db->select('*');
+    $this->db->from($table);
+    $this->db->where('id_entreprise = ',$id_e);
+    $this->db->where('idProduit', $id_produit);
+    $result = $this->db->get();
+    $table = array();
+    $i = 0;
+    foreach($result->result_array() as $row) {
+      $lists = array(
+                      'id_entreprise' => $row['id_entreprise'],
+                      'idProduit' => $row['idProduit'],         
+                     'nomProduit' => $row['nomProduit'],         
+                     'idAchat' => $row['idAchat'],         
+                     'prixUnitaire' => $row['prixUnitaire'],         
+                     'quantite' => $row['quantite'],         
+                     'rubrique' => $row['rubrique'],         
+                     'valeur_produit' => $row['valeur_produit'],         
+                     'unite' => $row['unite'],         
+                     'typeCharge' => $row['typeCharge']         
+                    );
+      $table[$i] = $lists;
+      $i++;
+    }
+    return $table;
+  }
 
 
 /***Requete pour prendre tous les elements du tableau entreprises**/

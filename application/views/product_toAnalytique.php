@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ajouter un produit</title>
+  <!-- <title>Ajouter un Centre</title> -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
    <!-- Required meta tags -->
    <meta charset="utf-8">
@@ -18,25 +18,26 @@
   <link rel="stylesheet" href="../assets/welcomecss/style.css">
   <link rel="stylesheet" href="http://localhost/SystemeInfo/assets/css/css/style.css">
 
-  <title>Insertion Produit</title>
+  <title>Affichage produit analytique </title>
 </head>
 <?php include 'headerMenu.php'; ?>
 <body>
   <div class="container">
-    <h1 class="mt-2"  style="color:#1f77b3">Ajouter un produit</h1>
 
-    <form method="post" action="<?php echo base_url('acueil/insertProduct'); ?>" class="mt-4">
-      <div class="form-group">
-        <p>
-           <label for="nom">Nom du produit :</label>
-          <input type="text" class="form-control" id="nom" name="nom" required>
-        </p>
-      </div>
+    <h1 class="mt-2"  style="color:#1f77b3">Selectionner un produit</h1>
 
-      <button type="submit" class="btn btn-primary">Ajouter le produit</button>
+    <form method="post" action="<?php echo base_url('acueil/viewAnalytique'); ?>" class="mt-4">
+        <div class="form-group">
+          <select class="form-control" name="produit">
+            <?php for ($i = 0;$i < count($produit);$i++) { ?>
+              <option value="<?php echo $produit[$i]['idProduit']; ?>"><?php echo $produit[$i]['nomProduit']; ?></option>
+            <?php } ?>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary">valider </button>
     </form>
-  </div>
 
+  </div>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

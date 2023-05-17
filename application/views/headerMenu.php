@@ -47,7 +47,7 @@
             <a class="nav-link" href="<?php echo base_url('acueil/insertProductView'); ?>">Ajout Produit</a>
           </li>
           <li class="nav-item pl-1">
-            <a class="nav-link" href="<?php echo base_url('acueil/viewAnalytique'); ?>"></i>Analytique</a>
+            <a class="nav-link" href="<?php echo base_url('acueil/getProductAnalytique'); ?>"></i>Analytique</a>
           </li>
           <li class="nav-item pl-1">
             <a class="nav-link" href="<?php echo base_url('acueil/getbalance'); ?>"></i>Balance</a>

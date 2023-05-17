@@ -300,6 +300,7 @@ create table different_charge(
 
 create table AchatAnalytique(
     idAchat int unsigned auto_increment primary key,
+    id_entreprises int,
     rubrique varchar(100),
     quantite decimal,
     prixUnitaire decimal,
@@ -307,6 +308,7 @@ create table AchatAnalytique(
     idDC int,
     idTypeCharge int,
     foreign key(idDC) references different_charge(idDC),
+    foreign key(id_entreprises) references entreprises(id),
     foreign key(idTypeCharge) references type_charge(idTypeCharge)
 );
 
@@ -318,7 +320,7 @@ create table produit_incorporable(
     foreign key(idAchat) references AchatAnalytique(idAchat),
     foreign key(idProduit) references Produit(idProduit)
 );
-insert into produit_incorporable values(null,1,1,100);
+-- insert into produit_incorporable values(null,1,1,100);
 
 create table pourcentage_centre_par_produit(
     idPourcentage int unsigned auto_increment primary key,
@@ -338,21 +340,22 @@ insert into Produit values(null,'mais');
 insert into type_charge values(null,'variable');
 insert into type_charge values(null,'fixe');
 
-insert into pourcentage_centre_par_produit values(null,1,1,40);
-insert into pourcentage_centre_par_produit values(null,1,1,25);
-insert into pourcentage_centre_par_produit values(null,1,1,35);
+-- insert into pourcentage_centre_par_produit values(null,1,1,40);
+-- insert into pourcentage_centre_par_produit values(null,1,1,25);
+-- insert into pourcentage_centre_par_produit values(null,1,1,35);
 
 insert into different_charge values(null,'incorporable');
 insert into different_charge values(null,'non incorporable');
 insert into different_charge values(null,'suppletives');
 
-insert into AchatAnalytique values(null,'Achat semence',10,'1200000','KG',1,1);
-insert into AchatAnalytique values(null,'Eau et electricite',1000,'500000','KW',1,1);
+-- insert into AchatAnalytique values(null,'Achat semence',10,'1200000','KG',1,1);
+-- insert into AchatAnalytique values(null,'Eau et electricite',1000,'500000','KW',1,1);
 
 
 insert into entreprise_centre values(NULL,1,1);
 insert into entreprise_centre values(NULL,1,2);
 insert into entreprise_centre values(NULL,1,3);
+
 
 create or replace view v_centreEntreprise as
 select idEC,id_entreprises,Centre.idCentre,Centre.nomCentre
@@ -362,8 +365,8 @@ on centre.idCentre=entreprise_centre.idCentre;
 
 
 
--- create or replace view v_analytique as
-select rubrique,prixUnitaire,quantite,(prixUnitaire*quantite) as TOTAL,unite,type_charge.typeCharge
+create or replace view v_analytique as
+select Entreprises.id as id_entreprise,AA.idAchat,Produit.idProduit,Produit.nomProduit,rubrique,prixUnitaire,quantite,((prixUnitaire*quantite)*PI.pourcentage_produit)/100 as valeur_produit,PCP.pourcentage,((((prixUnitaire*quantite)*PI.pourcentage_produit)/100)*PCP.pourcentage)/100 as valeur_centre,centre.idCentre,centre.nomCentre,unite,type_charge.typeCharge
 from produit_incorporable as PI
 join AchatAnalytique as AA
 on AA.idAchat=PI.idAchat
@@ -374,4 +377,53 @@ on centre.idCentre=PCP.idCentre
 join Produit 
 on Produit.idProduit= PI.idProduit
 join type_charge 
-on type_charge.idTypeCharge=AA.idTypeCharge;
+on type_charge.idTypeCharge=AA.idTypeCharge
+join Entreprises 
+on Entreprises.id=AA.id_entreprises;
+
+
+select idAchat
+from v_analytique2
+where id_entreprise='1' and idProduit='1';
+
+
+create or replace view v_analytique2 as
+select id_entreprise,idProduit,idAchat,nomProduit,rubrique,prixUnitaire,quantite,valeur_produit,unite,typeCharge
+from v_analytique
+group by idAchat;
+
+
+
+
+
+-- total vola variable par entreprise par produit
+select*
+from v_analytique2 where idProduit='1' and id_entreprise='1';
+
+-- somme global
+select sum(valeur_centre) as somme_global from v_analytique where id_entreprise='1' and idProduit='1';
+
+-- somme charge fixe
+select sum(valeur_centre) as total_fixe from v_analytique where id_entreprise='1' and idProduit='1' and typeCharge='fixe';
+
+-- somme charge variable
+select sum(valeur_centre) as total_variable from v_analytique where id_entreprise='1' and idProduit='1' and typeCharge='variable';
+
+
+
+-- somme 
+-- create or replace view v_analytique as
+-- select Entreprises.id as id_entreprise,Produit.idProduit,Produit.nomProduit,rubrique,prixUnitaire,quantite,(prixUnitaire*quantite) as TOTAL,PI.pourcentage_produit,((prixUnitaire*quantite)*PI.pourcentage_produit)/100 as valeur_produit,PCP.pourcentage,((((prixUnitaire*quantite)*PI.pourcentage_produit)/100)*PCP.pourcentage)/100 as valeur_centre,PCP.idCentre,centre.nomCentre,unite,type_charge.typeCharge
+-- from produit_incorporable as PI
+-- join AchatAnalytique as AA
+-- on AA.idAchat=PI.idAchat
+-- join pourcentage_centre_par_produit as PCP
+-- on PI.idPI= PCP.idPI
+-- join centre
+-- on centre.idCentre=PCP.idCentre  
+-- join Produit 
+-- on Produit.idProduit= PI.idProduit
+-- join type_charge 
+-- on type_charge.idTypeCharge=AA.idTypeCharge
+-- join Entreprises 
+-- on Entreprises.id=AA.id_entreprises;

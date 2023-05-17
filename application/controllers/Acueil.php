@@ -583,7 +583,28 @@ public function getcredit(){
       'idCentre' => NULL,     
       'nomCentre' => $this->input->post('nomC'),
     );
+
+   
     $this->news_model->insertion("Centre", $dataProduct);
+    $id_entreprises = $_SESSION['entreprise']['id'];
+    $lastid = $this->news_model->lastid();
+    $dataProduct2 = array(
+      'idEC' => NULL,     
+      'id_entreprises' => $id_entreprises,     
+      'idCentre' => $lastid,
+    );
+    $this->news_model->insertion("entreprise_centre", $dataProduct2);
+		redirect(base_url('acueil/welcome'));
+  }
+
+
+  public function insertCenterPerEntreprise($id_e,$idCentre){
+    $dataProduct = array(
+      'idEC' => NULL,     
+      'id_entreprises' => $id_e,     
+      'idCentre' => $idCentre,
+    );
+    $this->news_model->insertion("entreprise_centre", $dataProduct);
 		redirect(base_url('acueil/welcome'));
   }
 
@@ -596,9 +617,43 @@ public function getcredit(){
     $this->load->view('insert_centre');
   }
  
+
+  public function getProductAnalytique(){
+    $table="Produit";
+    $data['produit'] = $this->news_model->selectionproduits($table);
+    $this->load->view('product_toAnalytique',$data);
+  }
+
   public function viewAnalytique(){
+    $variable="variable";
+    $fixe="fixe";
+    $idProduit= $this->input->post('produit');
     $id_entreprises = $_SESSION['entreprise']['id'];
+    $idAchats=$this->news_model->selectionidAchat($id_entreprises,$idProduit);
+    for($i=0;$i<count($idAchats);$i++){
+        $tableauParAchat = $this->news_model->selectionPerAchat($idAchats[$i],$id_entreprises,$idProduit);
+        $liste[$i]['idCentre'] = array();
+        $liste[$i]['nomCentre'] = array();
+        $liste[$i]['pourcentage'] = array();
+        $liste[$i]['valeur_centre'] = array();
+
+        foreach ($tableauParAchat as $row) {
+            $liste[$i]['idCentre'][] = $row['idCentre'];
+            $liste[$i]['nomCentre'][] = $row['nomCentre'];
+            $liste[$i]['pourcentage'][] = $row['pourcentage'];
+            $liste[$i]['valeur_centre'][] = $row['valeur_centre'];
+        }
+    }
+    $data['total_fixe'] = $this->news_model->getTotalTypeCharge($id_entreprises,$idProduit,$fixe);
+    $data['total_variable'] = $this->news_model->getTotalTypeCharge($id_entreprises,$idProduit,$variable);
     $data['centre'] = $this->news_model->selectionCentre($id_entreprises);
+    $data['total'] = $this->news_model->getTotal($id_entreprises, $idProduit);
+    $data['analytique'] = $this->news_model->selection_analytique($id_entreprises, $idProduit);
+    $data['analytique2'] = $this->news_model->selection_analytique2($id_entreprises, $idProduit);
+    $data['liste'] = $liste;
+    $data['achateffectue'] = $idAchats;
+
+
     $this->load->view('produit_analytique',$data);
   }
 
@@ -621,6 +676,8 @@ public function getcredit(){
       redirect(base_url('acueil/welcome'));
     }
   }
+
+
   public function insertAnalytique(){
     $id_entreprises = $_SESSION['entreprise']['id'];
     $rubrique = $_SESSION['achat1']['motifs'];
@@ -642,6 +699,7 @@ public function getcredit(){
 
     $achatAn = array(
       'idAchat' => NULL,
+      'id_entreprises' => $id_entreprises,
       'rubrique' => $rubrique,
       'quantite' => $quantite,
       'prixUnitaire' => $prixUnitaire,
